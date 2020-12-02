@@ -17,7 +17,7 @@ The CPU could support 256 instructions, as well, but we won't need them.
 For starters, we'll execute code that stores the value 8 in a register,
 then prints it out:
 
-```
+```python
 # print8.ls8: Print the number 8 on the screen
 
 10000010 # LDI R0,8
