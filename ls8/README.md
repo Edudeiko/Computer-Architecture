@@ -51,7 +51,7 @@ See [the LS-8 spec](../LS8-spec.md) for more details.
 The above program is already hardcoded into the source file `cpu.py`. To run it,
 you will eventually:
 
-```
+```python
 python3 ls8.py
 ```
 
@@ -134,7 +134,7 @@ name instead of by numeric value.
 
 In `run()` in your if-else block, exit the loop if a `HLT` instruction is
 encountered, regardless of whether or not there are more lines of code in the
-LS-8 program you loaded. 
+LS-8 program you loaded.
 
 We can consider `HLT` to be similar to Python's `exit()` in that we stop
 whatever we are doing, wherever we are.

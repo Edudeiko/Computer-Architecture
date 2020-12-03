@@ -2,12 +2,34 @@
 
 import sys
 
+
 class CPU:
     """Main CPU class."""
 
     def __init__(self):
         """Construct a new CPU."""
-        pass
+        self.reg = [0] * 8  # 8 general-purpose registers (8-bit)
+        self.ram = [0] * 256  # 256 bytes of memory
+        self.pc = 0  # program counter
+
+        # Instruction definition
+        self.SAVE = 0b10000010
+        self.PRINT_REG = 0b01000111
+        self.HALT = 0b00000001
+
+    def ram_read(self, address):
+        '''
+        accept the address to read and return the value stored there.
+        '''
+        # Return the binary representation of an integer.
+        # return bin(self.ram[address])
+        return self.ram[address]
+
+    def ram_write(self, value, address):
+        '''
+        accept a value to write, and the address to write it to.
+        '''
+        self.ram[address] = value
 
     def load(self):
         """Load a program into memory."""
@@ -18,25 +40,24 @@ class CPU:
 
         program = [
             # From print8.ls8
-            0b10000010, # LDI R0,8
+            0b10000010,  # LDI R0,8
             0b00000000,
             0b00001000,
-            0b01000111, # PRN R0
+            0b01000111,  # PRN R0
             0b00000000,
-            0b00000001, # HLT
+            0b00000001,  # HLT
         ]
 
         for instruction in program:
             self.ram[address] = instruction
             address += 1
 
-
     def alu(self, op, reg_a, reg_b):
         """ALU operations."""
 
         if op == "ADD":
             self.reg[reg_a] += self.reg[reg_b]
-        #elif op == "SUB": etc
+        # elif op == "SUB": etc
         else:
             raise Exception("Unsupported ALU operation")
 
@@ -48,8 +69,8 @@ class CPU:
 
         print(f"TRACE: %02X | %02X %02X %02X |" % (
             self.pc,
-            #self.fl,
-            #self.ie,
+            # self.fl,
+            # self.ie,
             self.ram_read(self.pc),
             self.ram_read(self.pc + 1),
             self.ram_read(self.pc + 2)
@@ -62,4 +83,30 @@ class CPU:
 
     def run(self):
         """Run the CPU."""
-        pass
+
+        running = True
+        self.pc = 0
+
+        while running:
+            command = self.ram[self.pc]
+
+            # SAVE
+            if command == self.SAVE:
+                register = self.ram[self.pc + 1]
+                num_to_save = self.ram[self.pc + 2]
+                self.reg[register] = num_to_save
+                self.pc += 2  # (command >> 6)
+
+            # PRINT_REG
+            elif command == self.PRINT_REG:
+                reg_address = self.ram[self.pc + 1]
+                print(self.reg[reg_address])
+                # same
+                print(self.reg[self.ram_read(self.pc + 1)])
+                # self.pc += (command >> 6)
+
+            # HLT
+            elif command == self.HALT:
+                running = False
+
+            self.pc += 1

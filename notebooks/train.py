@@ -75,7 +75,7 @@ while running:
         registers[register_address] = num_to_save
 
         # shorter:
-        # register[memory + 2] = memory[pc + 1]
+        # registers[memory + 2] = memory[pc + 1]
 
         pc += 2
 
