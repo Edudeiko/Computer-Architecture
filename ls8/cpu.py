@@ -16,6 +16,7 @@ class CPU:
         self.SAVE = 0b10000010
         self.PRINT_REG = 0b01000111
         self.HALT = 0b00000001
+        self.MULT = 0b10100010
 
     def ram_read(self, address):
         '''
@@ -52,6 +53,33 @@ class CPU:
             self.ram[address] = instruction
             address += 1
 
+    def load_ram(self):
+        try:
+            if len(sys.argv) < 2:
+                print(f'Error from {sys.argv[0]}: missing filename argument')
+                print(f'Usage: python3 {sys.argv[0]} <filename>')
+                sys.exit(1)
+
+            # add a counter that adds to memory at that index
+            ram_index = 0
+
+            with open(sys.argv[1]) as f:
+                for line in f:
+                    split_line = line.split("#")[0]
+                    strtipped_split_line = split_line.strip()
+
+                    if strtipped_split_line != "":
+                        command = int(strtipped_split_line, 2)
+
+                        # load command into memory
+                        self.ram[ram_index] = command
+
+                        ram_index += 1
+
+        except FileNotFoundError:
+            print(f'Error from {sys.srgv[0]}: {sys.argv[1]} not found')
+            print('Please double check the file name')
+
     def alu(self, op, reg_a, reg_b):
         """ALU operations."""
 
@@ -85,28 +113,38 @@ class CPU:
         """Run the CPU."""
 
         running = True
-        self.pc = 0
+        # self.pc = 0
 
         while running:
             command = self.ram[self.pc]
 
             # SAVE
             if command == self.SAVE:
-                register = self.ram[self.pc + 1]
-                num_to_save = self.ram[self.pc + 2]
-                self.reg[register] = num_to_save
-                self.pc += 2  # (command >> 6)
+                num_to_save = self.ram[self.pc + 1]
+                register_address = self.ram[self.pc + 2]
+                self.reg[num_to_save] = register_address
+                # self.pc += 2  # (command >> 6)
 
             # PRINT_REG
             elif command == self.PRINT_REG:
                 reg_address = self.ram[self.pc + 1]
                 print(self.reg[reg_address])
                 # same
-                print(self.reg[self.ram_read(self.pc + 1)])
+                # print(self.reg[self.ram_read(self.pc + 1)])
                 # self.pc += (command >> 6)
+
+            # MULT
+            elif command == self.MULT:
+                reg1_address = self.ram[self.pc + 1]
+                reg2_address = self.ram[self.pc + 2]
+
+                self.reg[reg1_address] = self.reg[reg1_address] * self.reg[reg2_address]
 
             # HLT
             elif command == self.HALT:
                 running = False
 
-            self.pc += 1
+            number_of_operands = command >> 6
+            self.pc += (1 + number_of_operands)
+
+            # self.pc += 1

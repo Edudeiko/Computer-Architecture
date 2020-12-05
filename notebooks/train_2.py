@@ -5,7 +5,7 @@ HALT      = 0b00000010
 PRINT_NUM = 0b01000011  # a 2-byte command, takes 1 argument
 SAVE      = 0b10000100  # a 3-byte command, takes 2 arguments
 PRINT_REG = 0b01000101
-ADD       = 0b10100110 
+ADD       = 0b10100110
 
 
 # a data-driven machine

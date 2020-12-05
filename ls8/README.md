@@ -162,7 +162,7 @@ into the source. This isn't particularly user-friendly.
 Make changes to `cpu.py` and `ls8.py` so that the program can be specified on
 the command line like so:
 
-```
+```txt
 python3 ls8.py examples/mult.ls8
 ```
 
@@ -194,7 +194,7 @@ so you can look in `sys.argv[1]` for the name of the file to load.
 > expect, and print an error and exit if they didn't.
 
 In `load()`, you will now want to use those command line arguments to open a
-file, read in its contents line by line, and save appropriate data into RAM. 
+file, read in its contents line by line, and save appropriate data into RAM.
 
 As you process lines from the file, you should be on the lookout for blank lines
 (ignore them), and you should ignore everything after a `#`, since that's a
@@ -212,7 +212,7 @@ x = int("1010101", 2)  # Convert binary string to integer
 
 Extend your LS8 emulator to support the following program:
 
-```
+```txt
 # mult.ls8: Multiply 8x9 and print 72
 
 10000010 # LDI R0,8
@@ -231,7 +231,7 @@ Extend your LS8 emulator to support the following program:
 
 One you run it with `python3 ls8.py examples/mult.ls8`, you should see:
 
-```
+```python
 72
 ```
 
@@ -296,10 +296,10 @@ a high address) and grows _downward_ as things are pushed on. The LS-8 is no
 exception to this.
 
 Implement a system stack per the spec. Add `PUSH` and `POP` instructions. Read
-  the beginning of the spec to see which register is the stack pointer. 
+  the beginning of the spec to see which register is the stack pointer.
   
-* Values themselves should be saved in the ***portion of RAM*** _that is allocated for the stack_. 
-  -  Use the stack pointer to modify the correct block of memory. 
+* Values themselves should be saved in the ***portion of RAM*** _that is allocated for the stack_.
+  -  Use the stack pointer to modify the correct block of memory.
   - Make sure you update the stack pointer appropriately as you `PUSH` and `POP` items to and from the stack.
 
 If you run `python3 ls8.py examples/stack.ls8` you should see the output:
