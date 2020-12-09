@@ -11,12 +11,18 @@ class CPU:
         self.reg = [0] * 8  # 8 general-purpose registers (8-bit)
         self.ram = [0] * 256  # 256 bytes of memory
         self.pc = 0  # program counter
+        self.reg[7] = 0xF4  # SP (Stack Pointer)
 
         # Instruction definition
-        self.SAVE = 0b10000010
+        # LDI - This instruction sets a specified register to a specified value
+        self.SAVE = 0b10000010  # LDI
         self.PRINT_REG = 0b01000111
-        self.HALT = 0b00000001
+        # HLT to be similar to Python's `exit()`
+        self.HALT = 0b00000001  # HLT
         self.MULT = 0b10100010
+        self.POP = 0b01000110
+        self.PUSH = 0b01000101
+        self.ADD = 0b10100000
 
     def ram_read(self, address):
         '''
@@ -133,12 +139,39 @@ class CPU:
                 # print(self.reg[self.ram_read(self.pc + 1)])
                 # self.pc += (command >> 6)
 
+            elif command == self.ADD:
+                reg1_address = self.ran[self.pc + 1]
+                reg2_address = self.ram[self.pc + 2]
+
+                self.reg[reg1_address] += self.reg[reg2_address]
+
             # MULT
             elif command == self.MULT:
                 reg1_address = self.ram[self.pc + 1]
                 reg2_address = self.ram[self.pc + 2]
 
-                self.reg[reg1_address] = self.reg[reg1_address] * self.reg[reg2_address]
+                # self.reg[reg1_address] = self.reg[reg1_address] * self.reg[reg2_address]
+                self.reg[reg1_address] *= self.reg[reg2_address]
+
+            elif command == self.PUSH:
+                self.reg[7] -= 1
+
+                register_address = self.ram[self.pc + 1]
+                value = self.reg[register_address]
+
+                SP = self.reg[7]
+                self.ram[SP] = value
+
+            elif command == self.POP:
+                SP = self.reg[7]
+
+                value = self.ram[SP]
+
+                register_address = self.ram[self.pc + 1]
+
+                self.reg[register_address] = value
+
+                self.reg[7] += 1
 
             # HLT
             elif command == self.HALT:

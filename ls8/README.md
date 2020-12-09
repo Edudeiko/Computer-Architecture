@@ -299,12 +299,12 @@ Implement a system stack per the spec. Add `PUSH` and `POP` instructions. Read
   the beginning of the spec to see which register is the stack pointer.
   
 * Values themselves should be saved in the ***portion of RAM*** _that is allocated for the stack_.
-  -  Use the stack pointer to modify the correct block of memory.
+  - Use the stack pointer to modify the correct block of memory.
   - Make sure you update the stack pointer appropriately as you `PUSH` and `POP` items to and from the stack.
 
 If you run `python3 ls8.py examples/stack.ls8` you should see the output:
 
-```
+```txt
 2
 4
 1
@@ -320,7 +320,7 @@ enables you to create reusable functions.
 Subroutines have many similarities to functions in higher-level languages. Just
 as a function in C, JavaScript or Python will jump from the function call, to
 its definition, and then return back to the line of code following the call,
-subroutines will also allow us to execute instructions non-sequentially. 
+subroutines will also allow us to execute instructions non-sequentially.
 
 The stack is used to hold the return address used by `RET`, so you **must**
 implement the stack in step 10, first. Then, add subroutine instructions `CALL`
@@ -332,7 +332,7 @@ and `RET`.
   specific address.
 
   > Note: `CALL` is very similar to the `JMP` instruction. However, there is one
-  > key difference between them. Can you find it in the specs? 
+  > key difference between them. Can you find it in the specs?
 
   * In **any** case where the instruction handler sets the `PC` directly, you
     _don't_ want to advance the PC to the next instruction. So you'll have to
@@ -342,7 +342,7 @@ and `RET`.
 
 If you run `python3 ls8.py examples/call.ls8` you should see the output:
 
-```
+```txt
 20
 30
 36
@@ -381,7 +381,7 @@ popped off the stack and execution continues normally.
 This code prints out the letter `A` from the timer interrupt handler
 that fires once per second.
 
-```
+```txt
 # interrupts.ls8
 
 10000010 # LDI R0,0XF8
@@ -458,7 +458,7 @@ does it differently than Unix/Mac.
 
 Write an LS-8 assembly program that prints this curve on the screen:
 
-```
+```txt
 *
 **
 ****
