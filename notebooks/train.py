@@ -26,10 +26,12 @@ import sys
 PRINT_TIM = 0b00000001
 HALT =      0b00000010
 PRINT_NUM = 0b01000011  # a 2-byte command, takes 1 arguments
-SAVE =      0b10000100  # a 3-byte command, takes 2 arguments
+SAVE      = 0b10000100  # a 3-byte command, takes 2 arguments
 PRINT_REG = 0b01000101
 # PRINT_SUM = 0b00000110
 ADD       = 0b10100110
+PUSH      = 0b01000111
+POP       = 0b01001000
 
 # a data-driven machine
 # function call
@@ -55,6 +57,9 @@ memory = [0] * 256
 
 # registers, R0-R7
 registers = [0] * 8
+
+# set the stack pointer
+registers[7] = 0xF4
 
 running = True
 
@@ -128,6 +133,45 @@ while running:
         reg2_address = memory[pc + 2]
 
         registers[reg1_address] += registers[reg2_address]
+
+    elif command == PUSH:
+        # decrement the SP
+        # at start, the SP points to address F$
+        # can just do arithmetic on hex, like F4 - 1
+        # R7 is our SP, currently points to (aka holds) F$
+        registers[7] -= 1
+
+        # copy value from given register into address pointed to by SP
+        # value from register?
+        register_address = memory[pc + 1]
+        value = registers[register_address]
+
+        # copy into SP address
+        # now let's copy this value into our memory
+        # but where in memory?
+
+        # memeory[SP] = value
+        # memory[registers[7]] = value
+
+        SP = registers[7]
+        memory[SP] = value
+
+    elif command == POP:
+        # copy the value from the address pointed to by 'SP' to the given
+        # register. Get the SP
+        SP = registers[7]
+        # copy the value from memory at that SP address
+        value = memory[SP]
+
+        # get the target register address
+        # aka, where should we put this value from RAM?
+        register_address = memory[pc + 1]
+
+        # put the value in that register
+        registers[register_address] = value
+
+        # increment the SP (move it back up)
+        registers[7] += 1
 
     elif command == HALT:
         running = False

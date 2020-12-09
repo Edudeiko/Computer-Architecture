@@ -2,6 +2,7 @@
 00000001  # print tim
 01000011  # print num
 00101010  # the number 42
+
 10000100  # save
 01100011  # 99
 00000010  # into R2
@@ -16,5 +17,14 @@
 
 01000101  # print reg
 00000010  # R2 again - should be 100 now!
+
+01000111 # PUSH
+00000010 # from R2
+
+01001000 # POP      <-- PC
+00000100 # into R4
+
+01000101  # print reg
+00000100  # Register 4 - should now be the number 99
 
 00000010  # but this time it's the command halt
