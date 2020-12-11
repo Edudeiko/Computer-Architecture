@@ -23,6 +23,9 @@ class CPU:
         self.POP = 0b01000110
         self.PUSH = 0b01000101
         self.ADD = 0b10100000
+        self.CALL = 0b01010000
+        self.JUMP = 0b01010100
+        self.RET = 0b00010001
 
     def ram_read(self, address):
         '''
@@ -140,7 +143,7 @@ class CPU:
                 # self.pc += (command >> 6)
 
             elif command == self.ADD:
-                reg1_address = self.ran[self.pc + 1]
+                reg1_address = self.ram[self.pc + 1]
                 reg2_address = self.ram[self.pc + 2]
 
                 self.reg[reg1_address] += self.reg[reg2_address]
@@ -173,11 +176,54 @@ class CPU:
 
                 self.reg[7] += 1
 
+            elif command == self.CALL:
+                # 1. push return address into Stack
+                # find the address/index of the command AFTER call
+                next_command_address = self.pc + 2
+
+                # push the address into Stack
+                # decrement the SP
+                self.reg[7] -= 1
+
+                # put the next command address at the location in memory
+                # where the stack pointer points
+                SP = self.reg[7]
+                self.ram[SP] = next_command_address
+
+                # 2. jump, set the PC to wherever the register says
+                # find the number of the register to look at
+                register_address = self.ram[self.pc + 1]
+
+                # get the address of the subroutine out of that register
+                address_to_jump = self.reg[register_address]
+
+                # set the pc
+                self.pc = address_to_jump
+
+            elif command == self.RET:
+                # Pop the value from the top of the stack and store it in the `PC`
+
+                # Pop from top of stack
+                # get the value first
+                SP = self.reg[7]
+                return_address = self.ram[SP]
+
+                # then move the stack pointer back up
+                self.reg[7] += 1
+
+                # jump back, set PC to this value
+                self.pc = return_address
+
             # HLT
             elif command == self.HALT:
                 running = False
 
             number_of_operands = command >> 6
-            self.pc += (1 + number_of_operands)
+
+            # bit shift and mask to isolate the 'C' bit
+            sets_pc_directly = ((command >> 4) & 0b001) == 0b001
+
+            if not sets_pc_directly:
+                self.pc += (1 + number_of_operands)
 
             # self.pc += 1

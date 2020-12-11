@@ -176,7 +176,7 @@ while running:
         registers[7] += 1
 
     elif command == CALL:
-        # Step 1; push the return address onto the stack
+        # Step 1: push the return address onto the stack
         # find the address/index of the command AFTER call
         next_command_address = pc + 2
 
@@ -201,8 +201,8 @@ while running:
         pc = address_to_jump_to
 
     elif command == RET:
-        # POP get the address of our subroutine out of that register
-        
+        # Pop the value from the top of the stack and store it in the `PC`
+
         # Pop from top of stack
         # get the value first
         SP = registers[7]
@@ -211,7 +211,7 @@ while running:
         # then move the stack pointer back up
         registers[7] += 1
 
-        # Step 2: jump back, set the PC tp this value
+        # Step 2: jump back, set the PC to this value
         pc = return_address
 
     elif command == HALT:
