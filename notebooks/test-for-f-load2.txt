@@ -1,0 +1,29 @@
+01000011 # PRINT_NUM    address 0 in RAM
+00101010  # the number 42, address 1 in RAM
+
+10000100  #  SAVE
+00001000   # 8 address to jump to
+00000011   # 3 , register number
+
+01011001   # CALL, address 2 in RAM
+00000011     # 3,  register number which holds the address we're jumping to
+
+00000010  # HALT, CALL will push this address/index onto the stack         <----- PC
+
+01000011 # PRINT_NUM, beginning of our subroutine   
+01100011 # 99
+
+10000100  #  SAVE   
+00010000   # 8 address/index of our second subroutine
+00000011   # 3, register number
+           
+           # SAVE into Register 1, Register 2
+01011001   # CALL   
+00000011   # 3, register number
+
+00011010  #  RET looks at the stack to know where to jump to   
+
+01000011 # PRINT_NUM, beginning of our second subroutine        <--------------------
+
+01100011 # 99
+00011010  #  RET
