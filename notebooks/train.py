@@ -32,6 +32,8 @@ PRINT_REG = 0b01000101
 ADD       = 0b10100110
 PUSH      = 0b01000111
 POP       = 0b01001000
+CALL      = 0b01011001
+RET       = 0b00011010
 
 # a data-driven machine
 # function call
@@ -173,10 +175,54 @@ while running:
         # increment the SP (move it back up)
         registers[7] += 1
 
+    elif command == CALL:
+        # Step 1; push the return address onto the stack
+        # find the address/index of the command AFTER call
+        next_command_address = pc + 2
+
+        # push the address onto the stack
+        # decrement the SP
+        registers[7] -= 1
+
+        # put the next command address at the location in memory
+        # where the stack pointer points
+        # memory[reg[7]] = next_command_address
+        SP = registers[7]
+        memory[SP] = next_command_address
+
+        # Step 2: jump, set the PC to wherever the register says
+        # find the number of the register to look at
+        register_address = memory[pc + 1]
+
+        # get the address of our subroutine out of that register
+        address_to_jump_to = registers[register_address]
+
+        # set the pc
+        pc = address_to_jump_to
+
+    elif command == RET:
+        # POP get the address of our subroutine out of that register
+        
+        # Pop from top of stack
+        # get the value first
+        SP = registers[7]
+        return_address = memory[SP]
+
+        # then move the stack pointer back up
+        registers[7] += 1
+
+        # Step 2: jump back, set the PC tp this value
+        pc = return_address
+
     elif command == HALT:
         running = False
 
     number_of_operands = command >> 6
-    pc += (1 + number_of_operands)
+
+    # bit shift and mask to isolate the 'C' bit
+    sets_pc_directly = ((command >> 4) & 0b001) == 0b001
+
+    if not sets_pc_directly:
+        pc += (1 + number_of_operands)
 
     # pc += 1  # so we don't get sucked into an infinite loop!
