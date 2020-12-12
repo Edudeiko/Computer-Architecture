@@ -64,6 +64,7 @@ class CPU:
     #         address += 1
 
     def load_ram(self):
+        '''python3 ls8.py sctest.ls8'''
         try:
             if len(sys.argv) < 2:
                 print(f'Error from {sys.argv[0]}: missing filename argument')
@@ -245,31 +246,36 @@ class CPU:
 
             elif command == self.CMP:
                 reg1 = self.ram_read(self.pc + 1)
+                # reg1 = self.ram[self.pc + 1]
                 reg2 = self.ram_read(self.pc + 2)
+                # reg2 = self.ram[self.pc + 2]
                 self.alu('CMP', reg1, reg2)
 
             elif command == self.JEQ:
                 if self.FL[2] == 1:
-                    self.pc = self.reg[self.ram[self.pc + 1]]
+                    reg = self.ram[self.pc + 1]
+                    self.pc = self.reg[reg]
                 else:
                     self.pc += 2
 
             elif command == self.JUMP:
                 reg = self.ram_read(self.pc + 1)
                 self.pc = self.reg[reg]
-            # else:
-            #     print('command is not recognized')
-                # sys.exit(1)
 
             elif command == self.JNE:
                 if self.FL[2] == 0:
-                    self.pc = self.reg[self.ram[self.pc + 1]]
+                    reg = self.ram[self.pc + 1]
+                    self.pc = self.reg[reg]
                 else:
                     self.pc += 2
 
             # HLT
             elif command == self.HALT:
                 running = False
+
+            else:
+                print('command is not recognized')
+                sys.exit(1)
 
             number_of_operands = command >> 6
 

@@ -72,7 +72,7 @@ print:
 5
 ```
 
-```
+```txt
 # Code to test the Sprint Challenge
 #
 # Expected output:
