@@ -30,11 +30,11 @@ class CPU:
         self.JEQ = 0b01010101  # If `equal` flag is set (true), jump to the address stored in the given register.
         self.JNE = 0b01010110  # If `E` flag is clear (false, 0), jump to the address stored in the given register.
 
-    def ram_read(self, value):
+    def ram_read(self, address):
         '''
         accept the address to read and return the value stored there.
         '''
-        return self.ram[value]
+        return self.ram[address]
 
     def ram_write(self, value, address):
         '''
