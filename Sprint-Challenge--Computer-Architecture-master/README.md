@@ -66,7 +66,7 @@ Validate your work through testing and ensure that your code operates as designe
 [Here is some code](sctest.ls8) that exercises the above instructions. It should
 print:
 
-```
+```txt
 1
 4
 5
