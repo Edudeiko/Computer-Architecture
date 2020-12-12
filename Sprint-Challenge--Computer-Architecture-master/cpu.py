@@ -115,6 +115,7 @@ class CPU:
                 self.FL[2] = 0
 
             elif self.reg[reg_a] > self.reg[reg_b]:
+
                 self.FL[1] = 1
                 self.FL[0] = 0
                 self.FL[2] = 0
@@ -284,5 +285,3 @@ class CPU:
 
             if not sets_pc_directly:
                 self.pc += (1 + number_of_operands)
-
-            # self.pc += 1
